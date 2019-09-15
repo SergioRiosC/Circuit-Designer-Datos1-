@@ -4,9 +4,11 @@ package Grafica;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +16,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.*;
 
@@ -33,17 +36,29 @@ class Ven extends JFrame{
 	JButton simular=new JButton("Simular");
 	JButton entradas=new JButton("Agregar entradas");
 
+	Listas linea;
+	Listas[] lin=new Listas[50];
+	int contLin=0;
 	
-	objeto AND =new objeto("C:\\\\Users\\\\xpc\\\\Desktop\\\\AND.jpg");
-	objeto NAND=new objeto("C:\\\\Users\\\\xpc\\\\Desktop\\\\NAND.jpg");
-	objeto OR=new objeto("C:\\\\Users\\\\xpc\\\\Desktop\\\\OR.jpg");
-	objeto NOT=new objeto("C:\\\\Users\\\\xpc\\\\Desktop\\\\NOT.jpg");
-	objeto NOR=new objeto("C:\\\\Users\\\\xpc\\\\Desktop\\\\NOR.jpg");
-	objeto XOR=new objeto("C:\\\\Users\\\\xpc\\\\Desktop\\\\XOR.jpg");
-	objeto XNOR=new objeto("C:\\\\Users\\\\xpc\\\\Desktop\\\\XNOR.jpg");
+	Listas[] Entradas=new Listas[50];
+	int contEnt=0;
 	
-	int cont=0;
-	Listas[] Entradas=new Listas[100];
+	Listas[] Parejas=new Listas[50];
+	int contPar=0;
+	
+	objeto AND =new objeto("AND.jpg","AND");
+	objeto NAND=new objeto("NAND.jpg","NAND");
+	objeto OR=new objeto("OR.jpg","OR");
+	objeto NOT=new objeto("NOT.jpg","NOT");
+	objeto NOR=new objeto("NOR.jpg","NOR");
+	objeto XOR=new objeto("XOR.jpg","XOR");
+	objeto XNOR=new objeto("XNOR.jpg","XNOT");
+	
+	
+	
+	
+	int y=10;
+	
 	
 	public Ven() {
 		setBounds(0, 0, 1300, 725);
@@ -57,14 +72,6 @@ class Ven extends JFrame{
 		panel.setBackground(Color.LIGHT_GRAY);
 		
 		
-		
-		AND.setBounds(1150,10,100,100);
-		NAND.setBounds(1150,100,100,100);
-		OR.setBounds(1150,190,100,100);
-		NOT.setBounds(1150,280,100,100);
-		NOR.setBounds(1150,370,100,100);
-		XOR.setBounds(1150,460,100,100);
-		XNOR.setBounds(1150,550,100,100);
 		simular.setBounds(50,575,100,25);
 		entradas.setBounds(180,575,160,25);
 
@@ -79,10 +86,9 @@ class Ven extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Entradas();
-				cont++;
+				contEnt=contEnt+1;
 			}
 		});
-		
 		panel.add(AND);
 		panel.add(NAND);
 		panel.add(OR);
@@ -95,15 +101,19 @@ class Ven extends JFrame{
 
 		add(panel);
 	}
+	
 	public void Simular(JPanel P2,JFrame V2) {
-		this.V2=V2;
+		Simulacion S=new Simulacion();
+		//System.out.println();	
+		JOptionPane.showMessageDialog(null,"El resultado es: "+S.recib(lin,Parejas,Entradas) );
+		/*this.V2=V2;
 		this.P2=P2;
 		V2.setBounds(400,225,500,200);
 		V2.setTitle("Resultado");
 		P2.setBackground(Color.DARK_GRAY);
 		P2.setLayout(null);
 		V2.setVisible(true);
-		V2.add(P2);		
+		V2.add(P2);	*/	
 	}
 	
 	public void Entradas()  {
@@ -113,24 +123,31 @@ class Ven extends JFrame{
 		panel.add(tf);
 		tf.addItem("0");
 		tf.addItem("1");
-		tf.setSelectedIndex(0);
+		tf.setSelectedIndex(1);
+		Entradas[contEnt]=new Listas(tf);
 		tf.setVisible(true);
-		panel.repaint();	
+		
+		panel.repaint();
 }
 	
-	 class mouse extends JComboBox implements  MouseMotionListener, ItemListener{
+class mouse extends JComboBox implements  MouseMotionListener, ItemListener{
 		public mouse(){
+			
 			JComboBox tf=new JComboBox();
-			Entradas[cont]=new Listas(tf);
+			
+			
 			tf.addItemListener(this);
 			addMouseMotionListener(this);
+			
 		}
 		public Listas[] getEntradas() {
 			return Entradas;
 		}
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			
 			setLocation(this.getX()+e.getX()-this.getWidth()/2, this.getY()+e.getY()-this.getHeight()/2 );	
+			
 		}
 		@Override
 		public void mouseMoved(MouseEvent e) {}
@@ -139,26 +156,53 @@ class Ven extends JFrame{
 	}
 	
 
-class objeto extends JLabel implements MouseMotionListener{
-	public objeto(String ubic) {
+class objeto extends JLabel implements MouseMotionListener, MouseListener{
+	
+	String nombre;
+	public objeto(String ubic,String name)  {
+		this.nombre=name;
 		ImageIcon nom= new ImageIcon(ubic);
 		setIcon(nom);
+		setSize(100, 100);
+		setLocation(1150,y);
+		y=y+90;
 		addMouseMotionListener(this);
+		addMouseListener(this);
 	}
 	@Override
 	public void mouseDragged(MouseEvent e) {	
+		//setBounds(this.getX()+e.getX()-this.getWidth()/2, this.getY()+e.getY()-this.getHeight()/2, 150, 100);
+		setLocation(this.getX()+e.getX()-this.getWidth()/2, this.getY()+e.getY()-this.getHeight()/2 );	
 		
-		setLocation(this.getX()+e.getX()-this.getWidth()/2, this.getY()+e.getY()-this.getHeight()/2 );
+		
 	}
-	
 	@Override
-	public void mouseMoved(MouseEvent e) {		
+	public void mouseMoved(MouseEvent e) {}
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		 
+		this.setBounds(this.getX(),this.getY(), 100, 100);
+		repaint();
+		
+		//Simulacion.recib(this.getBounds(),nombre);
+		Parejas[contPar]=new Listas(nombre, this.getBounds());
+		//System.out.println(Parejas[contPar]);
+		contPar++;
 	}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }
+
+
+
 class LinePanel extends JPanel {
-	Listas linea;
-	Listas[] lin=new Listas[100];
-	int cont=0;
+	int contLin=0;
 	private MouseHandler mouseHandler = new MouseHandler();
     private Point p1= new Point(0,0);
     private Point p2 = new Point(0,0);
@@ -183,7 +227,7 @@ class LinePanel extends JPanel {
         g2d.setStroke(new BasicStroke(3,
             BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
         
-       for(int i=0;i<cont;i++) {
+       for(int i=0;i<contLin;i++) {
     	   lin[i].dibujar(g);
        }       
         g.drawLine(p1.x, p1.y, p2.x, p2.y);          
@@ -204,8 +248,8 @@ class LinePanel extends JPanel {
         	if(e.getButton()==MouseEvent.BUTTON3) {
 	            drawing = false;
 	            p2 = e.getPoint();
-	            lin[cont]=linea;
-	            cont++;
+	            lin[contLin]=linea;
+	            contLin++;
 	            repaint();
 	            p1.x=0;
 	            p1.y=0;
