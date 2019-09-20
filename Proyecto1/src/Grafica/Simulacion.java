@@ -1,7 +1,9 @@
 package Grafica;
-
-import java.awt.Rectangle;
-
+/**
+ * Clase que ejecuta la simulacion de circuitos.
+ * Hereda de la clase ven.
+ * @author SergioRios
+ */
 public class Simulacion extends Ven {
 	Listas[] lineas;
 	Listas[] pares;
@@ -14,10 +16,14 @@ public class Simulacion extends Ven {
 	int contEnt=0;
 	
 	static Logica log =new Logica();
-	public Simulacion() {
-		
-	}
-	public  int recib(Listas[] lin, Listas[] Parejas, Listas[] Entradas) {
+	/**
+	 * Funcion que conecta las listas de lineas entradas y las coloca en una lista nueva. La lista es enviada a realizar las operaciones correspondientes
+	 * @param lin Lista que contiene todas las lineas dibujadas.
+	 * @param Parejas Lista con la pocision de las imagenes de las compuertas y sus nombres.
+	 * @param Entradas Lista que contiene las entradas reque ridas para el circuito del usuario.
+	 * @param resultados Lista que contendra los resultados de las operaciones.
+	 */
+	public  void recib(Listas[] lin, Listas[] Parejas, Listas[] Entradas , Listas[] resultados) {
 		this.lineas=lin;
 		this.pares=Parejas;
 		this.Entra=Entradas;
@@ -34,15 +40,14 @@ public class Simulacion extends Ven {
 						int ENT=Integer.parseInt(Entradas[contEnt].getTf().getSelectedItem().toString() );
 						String N=Parejas[contPareja].nombre;
 						//System.out.println("sale "+N);
-						
+						//System.out.println(lin[contLin]);
 						Operas[contOp]=new Listas(N,ENT );
 						//System.out.println("llega "+Operas[contOp].operacion);
 						
 						contOp++;
 						contEnt++;	
-					}
-					else {
-						System.out.println("no esta");
+					}else {
+						System.out.println("no esta "+Parejas[contPareja].nombre);
 					}
 					contPareja++;
 				}
@@ -51,11 +56,6 @@ public class Simulacion extends Ven {
 			contPareja=0;
 			contLin++;
 		}
-		return mandar(Operas);
-	}
-	public static int mandar(Listas[] Operas) {
-		return log.operaciones(Operas);
-	}
-	
-	
+		log.operaciones(Operas, resultados);
+	}	
 }
