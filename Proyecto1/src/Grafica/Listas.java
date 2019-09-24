@@ -1,6 +1,7 @@
 package Grafica;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import javax.swing.JComboBox;
 /**
@@ -28,7 +29,7 @@ public class Listas {
 	 * @param x2 Coordenada x2 de la linea.
 	 * @param y2 Coordenada y2 de la linea.
 	 */
-	public Listas(int x1, int y1, int x2, int y2) {//Lineas
+	public Listas(int x1, int y1, int x2, int y2) {   //Lineas
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
@@ -142,5 +143,4 @@ public class Listas {
 	public int getRes() {
 		return res;
 	}
-
 }

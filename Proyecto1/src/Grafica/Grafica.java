@@ -1,12 +1,13 @@
 package Grafica;
 
 import java.awt.BasicStroke;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -40,6 +41,8 @@ public class Grafica{
  *
  */
 class Ven extends JFrame{
+	Image image;
+	
 	LinePanel panel=new LinePanel();
 	JFrame V2=new JFrame();
 	JPanel P2=new JPanel();
@@ -59,8 +62,8 @@ class Ven extends JFrame{
 	
 	Listas[] resultados=new Listas[50];
 	
-	
 	objeto AND =new objeto("AND.jpg","AND");
+	
 	objeto NAND=new objeto("NAND.jpg","NAND");
 	objeto OR=new objeto("OR.jpg","OR");
 	objeto NOT=new objeto("NOT.jpg","NOT");
@@ -114,21 +117,24 @@ class Ven extends JFrame{
 
 		add(panel);
 	}
+		
+	
 	/**
 	 * Funcion que simula el circuito establecido por el usuario
 	 * @param P2 Panel de segunda ventana
 	 * @param V2 Segunda ventana
 	 */
 	public void Simular(JPanel P2,JFrame V2) {
-		int contRes=0;
+		int contRes=resultados.length-1;
 		Simulacion S=new Simulacion();
-		//System.out.println();	
 		S.recib(lin,Parejas,Entradas,resultados);
-		while(contRes<resultados.length) {
+		while(contRes>=0) { 
+			System.out.println(resultados[contRes] +" "+contRes);
 			if(resultados[contRes]!=null) {
 				JOptionPane.showMessageDialog(null,"El resultado es: "+resultados[contRes].getRes());
+				break;
 			}
-			contRes++;
+			contRes--;
 		}
 		/*this.V2=V2
 		this.P2=P2;
@@ -198,6 +204,7 @@ class objeto extends JLabel implements MouseMotionListener, MouseListener{
 	String nombre;
 	boolean b=false;
 	boolean drawing;
+	
 	/**
 	 * Constructor: Crea las imagenes y les agrega los MouseListener necesarios
 	 * 
@@ -205,6 +212,8 @@ class objeto extends JLabel implements MouseMotionListener, MouseListener{
 	 * @param name  Nombre de la compuerta logica.
 	 */
 	public objeto(String ubic,String name)  {
+	
+		
 		this.nombre=name;
 		ImageIcon nom= new ImageIcon(ubic);
 		setIcon(nom);
@@ -212,10 +221,11 @@ class objeto extends JLabel implements MouseMotionListener, MouseListener{
 		setSize(100, 100);
 		setLocation(1150,y);
 		y=y+90;
+		
 		addMouseMotionListener(this);
 		addMouseListener(this);
-		
 	}
+
 	/**
 	 * Funcion que realiza las lineas de conexion dentro de las imagenes
 	 * @param g Objeto del tipo Graphics a dibujar
@@ -224,13 +234,14 @@ class objeto extends JLabel implements MouseMotionListener, MouseListener{
     public void paintComponent(Graphics g) {  
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        
         g2d.setColor(Color.blue);
         g2d.setRenderingHint(
             RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setStroke(new BasicStroke(3,
             BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        
+       
        
         g.drawLine(p1.x, p1.y, p2.x, p2.y);          
     }
@@ -245,7 +256,8 @@ class objeto extends JLabel implements MouseMotionListener, MouseListener{
 			setLocation(this.getX()+e.getX()-this.getWidth()/2, this.getY()+e.getY()-this.getHeight()/2);	
 		}
 		if (drawing) {
-			p2 = e.getPoint();
+			p2.x = e.getLocationOnScreen().x;
+    		p2.y=e.getLocationOnScreen().y;
 			linea.setX2(p2.x);
 			linea.setY2(p2.y);
 			repaint();	
@@ -268,10 +280,13 @@ class objeto extends JLabel implements MouseMotionListener, MouseListener{
 			b=true;
 		}	
 		if(e.getButton()==MouseEvent.BUTTON3) {
+			
     		drawing = true;
-    		p1 = e.getPoint();
+    		p1.x = e.getLocationOnScreen().x;
+    		p1.y=e.getLocationOnScreen().y;
     		linea=new Listas(p1.x,p1.y,p2.x,p2.y);
     		repaint();
+    		
     	}
 	}
 	/**
@@ -283,8 +298,10 @@ class objeto extends JLabel implements MouseMotionListener, MouseListener{
 	public void mouseReleased(MouseEvent e) {
 		if(e.getButton()==MouseEvent.BUTTON3) {
             drawing = false;
-            p2 = e.getPoint();
+            p2.x = e.getLocationOnScreen().x;
+    		p2.y=e.getLocationOnScreen().y;
             lin[contLin]=linea;
+           
             contLin++;
             repaint();
 		}else {
@@ -320,6 +337,7 @@ class LinePanel extends JPanel {
     public LinePanel() {
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
+        
     }
     /**
      * Funcion para dibujar las lineas en el panel.
@@ -341,6 +359,7 @@ class LinePanel extends JPanel {
        }       
         g.drawLine(p1.x, p1.y, p2.x, p2.y);          
     }
+    
     /**
      * Clase que modifica los eventos del mouse.
      * Hereda de MouseAdapter.
@@ -353,6 +372,9 @@ class LinePanel extends JPanel {
     	 * @param e Objeto de mouse a procesar
     	 */
         public void mousePressed(MouseEvent e) {
+        	
+        	
+        	
         	if(e.getButton()==MouseEvent.BUTTON3) {
         		drawing = true;
         		p1 = e.getPoint();
@@ -384,7 +406,8 @@ class LinePanel extends JPanel {
         			linea.setY2(p2.y);
         			repaint();	
         		}
-        }                   
+        } 
+        
       }
 	}
 }

@@ -1,4 +1,9 @@
 package Grafica;
+
+import java.awt.Rectangle;
+
+import javax.swing.JOptionPane;
+
 /**
  * Clase que ejecuta la simulacion de circuitos.
  * Hereda de la clase ven.
@@ -29,14 +34,16 @@ public class Simulacion extends Ven {
 		this.Entra=Entradas;
 		
 		while(contLin<lin.length) {
+			//System.out.println(lin[0].x1);
+			//System.out.println(Parejas[contPareja].pos);
 			if(lin[contLin]==null) {}
+			
 			else {
 				while(contPareja<Parejas.length){
 					if(Parejas[contPareja]==null) {}
-					else if(Parejas[contPareja].pos.contains(lin[contLin].getX2(),lin[contLin].getY2())) {
-						
-						//System.out.println(Parejas[contPareja].nombre+" esta");
-						
+				
+					else if(Parejas[contPareja].pos.contains(lin[contLin].getX2(),lin[contLin].getY2())  ) {
+						System.out.println("esta "+Parejas[contPareja].nombre);
 						int ENT=Integer.parseInt(Entradas[contEnt].getTf().getSelectedItem().toString() );
 						String N=Parejas[contPareja].nombre;
 						//System.out.println("sale "+N);
@@ -46,7 +53,36 @@ public class Simulacion extends Ven {
 						
 						contOp++;
 						contEnt++;	
-					}else {
+						
+					}
+					else if(Parejas[contPareja].pos.contains(lin[contLin].getX1(),lin[contLin].getY1())) {
+						System.out.println("simon no weon");
+						int contRes=resultados.length-1;
+						int ENT=0;
+						String N="";
+						while(contRes>=0) { 
+							System.out.println("Buscando res ant");
+							if(resultados[contRes]!=null) {
+								System.out.println("res ant= "+resultados[contRes]);
+								ENT=Integer.parseInt(resultados[contRes].toString());
+								break;}
+							contRes--;}
+						int temp=contPareja;
+						while(temp<Parejas.length) {
+							System.out.println("buscando ope sig");
+							if(Parejas[temp]==null) {}
+							else if(Parejas[temp].pos.contains(lin[contLin].getX2(),lin[contLin].getY2())  ) {
+								System.out.println("ope sig= "+Parejas[temp].nombre);
+								N=Parejas[temp].nombre;	
+								break;
+							}
+							temp++;
+						}
+						Operas[contOp]=new Listas(N,ENT );
+					}
+						
+					
+					else {
 						System.out.println("no esta "+Parejas[contPareja].nombre);
 					}
 					contPareja++;

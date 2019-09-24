@@ -33,7 +33,6 @@ public class Logica {
 						resultados[contResu]=new Listas(r);
 						System.out.println(resultados[contResu]);
 						contResu++;
-						
 					}
 					else if(Operas[c].operacion==Operas[c2].operacion) {
 						r=recib(Operas[c].operacion, Operas[c].i ,Operas[c2].i );
